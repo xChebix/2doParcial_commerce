@@ -6,19 +6,26 @@ interface Product {
   price: number;
   stock: number;
   image: string;
+  user_id: number;
 }
 
 function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    // Fetch product data from your server when the component mounts
-    fetch('http://localhost:8081/products')
-      .then((response) => response.json())
-      .then((data) => setProducts(data))
-      .catch((error) => console.error('Error fetching data:', error));
+    // Obtén el user_id del localStorage
+    const user_id = localStorage.getItem('user_id');
+    
+    // Verifica que el user_id exista antes de hacer la solicitud
+    if (user_id) {
+      // Fetch product data for the logged-in user using their user_id
+      fetch(`http://localhost:8081/products?user_id=${user_id}`)
+        .then((response) => response.json())
+        .then((data) => setProducts(data))
+        .catch((error) => console.error('Error fetching data:', error));
+    }
   }, []);
-
+  
   return (
     <div className="container text-center"> {/* Center align content */}
       <h1 className="mt-5">Productos</h1>

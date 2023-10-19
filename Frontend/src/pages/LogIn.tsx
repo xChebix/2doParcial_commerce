@@ -7,13 +7,31 @@ function LogIn(){
   const [password, setPassword] = useState('')
   const navigate = useNavigate();
 
+  const handleSuccessfulLogin = (id: string) => {
+    // Guardar el ID del usuario en localStorage
+    localStorage.setItem('user_id', id);
+
+    // Redirigir a la página de inicio o a donde sea necesario después del inicio de sesión
+    navigate('/home');
+  }
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    axios.post('http://localhost:8081/login',{username,password})
-    .then(() => {navigate("/home")})
-    .catch(err => console.log(err));
+    axios.post('http://localhost:8081/login', { username, password })
+      .then((response) => {
+        // Verificar si el inicio de sesión fue exitoso en la respuesta del servidor
+        if (response.status === 200 && response.data.id) {
+          // El inicio de sesión fue exitoso, guardar el ID del usuario y redirigir
+          handleSuccessfulLogin(response.data.id);
+        } else {
+          // Manejar el caso de inicio de sesión fallido
+          console.log('Inicio de sesión fallido');
+        }
+      })
+      .catch((err) => console.log(err));
   }
-  
+
+
   return (
     <div className="max-w-md mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Login</h2>

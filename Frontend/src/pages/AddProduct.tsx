@@ -1,4 +1,5 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
+import axios from 'axios'; // Importa Axios
 
 interface ProductData {
   name: string;
@@ -19,14 +20,33 @@ function ProductForm() {
     const { name, value } = e.target;
     setProductData({
       ...productData,
-      [name]: name === 'price' || name === 'stock' ? Number(value) : value,
+      [name]: value,
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Aquí puedes realizar alguna acción, como enviar los datos a un servidor.
-    // Ejemplo: axios.post('/api/create-product', productData)
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // Obtén el user_id del localStorage
+    const user_id = localStorage.getItem('user_id');
+
+    if (user_id) {
+      const product = {
+        ...productData,
+        user_id: user_id,
+      };
+
+      // Realiza la solicitud para agregar un producto con el user_id utilizando Axios
+      axios
+        .post('http://localhost:8081/add-product', product)
+        .then((response) => {
+          console.log('Producto agregado exitosamente:', response.data);
+          // Limpiar el formulario u hacer cualquier otra acción necesaria
+        })
+        .catch((error) => {
+          console.error('Error al agregar el producto:', error);
+        });
+    }
   };
 
   return (
@@ -77,7 +97,9 @@ function ProductForm() {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">Crear</button>
+        <button type="submit" className="btn btn-primary">
+          Crear
+        </button>
       </form>
     </div>
   );
