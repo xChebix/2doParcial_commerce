@@ -30,7 +30,7 @@ app.get("/user", (req,res)=> {
     })
 })
 app.get("/products", (req, res) => {
-    const user_id = req.query.user_id; // Obtén el user_id de la cadena de consulta
+    const user_id = req.query.user_id; // obtener user_id
     const sql = "SELECT * from product where user_id = ?";
     
     db.query(sql, user_id, (err, data) => {
@@ -40,7 +40,6 @@ app.get("/products", (req, res) => {
 });
 
 
-// Define a route to handle the POST request
 app.post('/add-product', (req, res) => {
     const { name, price, stock, image, user_id } = req.body;
     const values = [name, price, stock, image, user_id];
@@ -66,7 +65,7 @@ app.post('/login', (req, res) => {
         return res.status(500).json("Login Failed");
       }
       if (data.length > 0) {
-        const userId = data[0].id; // Obtén el ID del usuario de la respuesta
+        const userId = data[0].id; // id respuesta
         return res.status(200).json({ id: userId, message: "Login Successfully" });
       } else {
         return res.status(401).json("No record");

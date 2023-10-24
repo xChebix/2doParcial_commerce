@@ -10,7 +10,7 @@ function RegisterUser(){
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     axios.post('http://localhost:8081/registerUser',{username,password})
-    .then(() => {navigate("/login")})
+    .then(() => {navigate("/")})
     .catch(err => console.log(err));
   }
   

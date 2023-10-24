@@ -13,12 +13,9 @@ function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    // Obtén el user_id del localStorage
     const user_id = localStorage.getItem('user_id');
     
-    // Verifica que el user_id exista antes de hacer la solicitud
     if (user_id) {
-      // Fetch product data for the logged-in user using their user_id
       fetch(`http://localhost:8081/products?user_id=${user_id}`)
         .then((response) => response.json())
         .then((data) => setProducts(data))
